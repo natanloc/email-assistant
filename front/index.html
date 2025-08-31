@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoU | Email Assistant</title>
+</head>
+<div id="toast-container"></div>
+<body>
+  <img src="./images/AutoU-logo.png" alt="" id="logo">
+  <div id="container">
+    <div id="form">
+      <h3>Entrada de Dados</h3>
+      <div id="options">
+        <button id="sendTextButton">Enviar texto</button>
+        <button id="sendFileButton">Enviar arquivo</button>
+      </div>
+
+      <textarea name="emailText" id="emailTextField" placeholder="Digite o texto do e-mail aqui..."></textarea>
+
+      <div id="fileDropzone" class="dropzone" role="button" tabindex="0" aria-label="Enviar arquivo (clique ou arraste)">
+        <p id="dzText">Arraste e solte o arquivo aqui<br><small>ou clique para selecionar</small></p>
+        <input id="emailFile" name="emailFile" type="file" hidden />
+      </div>
+
+      <div id="fileInfo"></div>
+
+      <button id="analyse">
+        Analisar e-mail
+      </button>
+    </div>
+
+    <span id="separator"></span>
+
+    <div id="result">
+      <h3>Resultado da Análise</h3>
+
+      <div id="category">
+        <h4>Categoria:</h4>
+
+        <div id="badges">
+          <span>Produtivo</span>
+        </div>
+      </div>
+
+      <div id="suggestion">
+        <h4>Sugestão de resposta:</h4>
+        <p>
+          Essa é uma sugestão para responder ao e-mail recebido.
+        </p>
+      </div>
+
+      <div id="actions">
+        <h4>Com base no conteúdo do e-mail, você precisa:</h4>
+        <div id="to-do-list">
+          <div class="task">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="inactive">
+      <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0,0,256,256">
+        <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="none" stroke-linecap="none" stroke-linejoin="none" stroke-miterlimit="10" stroke-dasharray="none" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(3.2,3.2)"><circle cx="56.469" cy="53.744" r="1" fill="#ff7507" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray=""></circle><circle cx="53.824" cy="56.371" r="1" fill="#ff7507" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray=""></circle><path d="M28.279,15.974l2.589,-6.238c0.961,-2.315 4.159,-2.315 5.119,0l2.589,6.238c2.235,5.386 6.402,9.686 11.64,12.011l6.814,3.025c2.236,0.993 2.236,4.246 0,5.239l-7.034,3.122c-5.106,2.267 -9.199,6.413 -11.474,11.622l-2.556,5.853c-0.982,2.25 -4.096,2.25 -5.078,0l-2.556,-5.853c-2.274,-5.209 -6.368,-9.355 -11.474,-11.622l-7.034,-3.122c-2.236,-0.993 -2.236,-4.246 0,-5.239l6.814,-3.025" fill="none" stroke="#ff7507" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray=""></path><path d="M20.472,25.801c1.078,-0.766 2.085,-1.626 3.012,-2.57c1.401,-1.427 2.617,-3.046 3.61,-4.816" fill="none" stroke="#ff7507" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0,4"></path><path d="M58.393,50.653l0.427,-1.03c0.514,-1.241 2.23,-1.241 2.744,0l0.738,1.78c1.259,3.037 3.608,5.462 6.562,6.774l2.09,0.929c1.198,0.532 1.198,2.272 0,2.804l-2.214,0.984c-2.879,1.279 -5.187,3.618 -6.468,6.555l-0.719,1.647c-0.526,1.206 -2.196,1.206 -2.722,0l-0.719,-1.647c-1.281,-2.937 -3.589,-5.275 -6.468,-6.555l-2.214,-0.984c-1.197,-0.532 -1.197,-2.272 0,-2.804l1.272,-0.565" fill="none" stroke="#ff7507" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray=""></path></g></g>
+      </svg>
+      
+      <p>
+        Nossa IA analisa, classifica e gera insights baseados
+        no conteúdo do e-mail que você recebeu.
+        <br><br>
+        Faça a análise de um e-mail e receba:
+      </p>
+
+      <div id="insights">
+        <div>
+          <span>&check;</span>
+          <p>
+            Classificação do e-mail como <b>Produtivo</b> ou <b>Improdutivo</b>
+          </p>
+        </div>
+
+        <div>
+          <span>&check;</span>
+          <p>
+            Sugestão de resposta automática para o e-mail
+          </p>
+        </div>
+
+        <div>
+          <span>&check;</span>
+          <p>
+            Tarefas pendentes baseadas no conteúdo do <br>e-mail, caso haja
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div id="loader">
+      <div class="spinner"></div>
+      <p>Aguarde um momento...</p>
+    </div>
+  </div>
+</body>
+</html>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --orange-400: #ff8f08;
+  --orange-600: #ff7507;
+  --slate: #021b2a;
+  --standard-font: "Roboto", sans-serif;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: #111;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  cursor: pointer;
+}
+
+h3 {
+  color: white;
+  font-family: var(--standard-font);
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+h4 {
+  color: white;
+  font-family: var(--standard-font);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+span, p {
+  color: white;
+  font-family: var(--standard-font);
+  font-weight: 300;
+  font-size: 0.875rem;
+}
+
+#toast-container {
+  position: fixed;
+  top: 20px;
+  right: 50%;
+  transform: translateX(50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-family: var(--standard-font);
+  font-size: 0.9rem;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(-100%);
+  animation: slideIn 0.5s forwards, fadeOut 0.5s 4s forwards;
+}
+
+.toast.error {
+  background-color: #c53030;
+}
+
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+#loader {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 43%;
+  color: white;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--orange-600);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+#loader p {
+  font-family: var(--standard-font);
+  font-weight: 300;
+  font-size: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#logo {
+  width: 150px;
+  height: auto;
+  margin-bottom: 2rem;
+}
+
+#container {
+  background-color: var(--slate);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;
+  padding: 4rem;
+  width: 80%;
+}
+
+#form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 45%;
+
+  & #options {
+    display: flex;
+    gap: 0.5rem;
+
+    & button {
+      padding: 6px 12px;
+      background: transparent;
+      border: solid 1px var(--orange-400);
+      border-radius: 6px;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      width: 130px;
+      height: 36px;
+    }
+    & button:nth-child(1) {
+      background: var(--orange-400);
+    }
+  }
+
+  & textarea {
+    min-height: 150px;
+    background: rgb(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 4px;
+    padding: 0.7rem;
+    font-family: var(--standard-font);
+    outline: none;
+    transition: .2s;
+    margin-top: 0.5rem;
+
+    &:focus {
+      box-shadow: 0 0 12px 2px #4948a4;
+    }
+  }
+
+  & .dropzone {
+    min-height: 150px;
+    margin-top: 0.5rem;
+    border: 2px dashed #9aa0a6;
+    border-radius: 12px;
+    padding: 54px 24px;
+    text-align: center;
+    user-select: none;
+    transition: background 0.15s, border-color 0.15s;
+    display: none;
+  }
+  & .dropzone.is-active {
+    background: #f1f3f4;
+    border-color: #1a73e8;
+  }
+  & .dropzone:focus {
+    outline: 2px solid #1a73e8;
+    outline-offset: 2px;
+    border-radius: 12px;
+  }
+
+  & #fileInfo {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background-color: #002f4c;
+    border-radius: 6px;
+    margin-top: 1rem;
+    color: white;
+    font-family: var(--standard-font);
+  }
+
+  & #fileInfo span {
+      font-size: 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+  }
+
+  & .delete-file-btn {
+    background: none;
+    border: none;
+    color: var(--orange-400);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 0 0 10px;
+    line-height: 1;
+  }
+  
+
+  & #analyse {
+    width: 100%;
+    background: var(--orange-600);
+    border: none;
+    border-radius: 6px;
+    height: 40px;
+    font-size: 1rem;
+    font-weight: 400;
+    color: white;
+    transition: .2s;
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    & svg {
+      position: relative;
+      top: -2px;
+    }
+
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 12px #ff7507a2;
+    }
+  }
+}
+
+#separator {
+  height: 420px;
+  width: 1px;
+  display: block;
+  background: #002f4c;
+}
+
+#result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: white;
+  display: none;
+  width: 43%;
+  height: 420px;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--slate);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--orange-600);
+    border-radius: 10px;
+    border: 2px solid var(--slate);
+  }
+
+  & #badges {
+    display: flex;
+    margin-top: 0.5rem;
+    padding: 0.7rem 1rem;
+    width: 100%;
+    border: solid 1px #002f4c;
+    border-radius: 4px;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+
+    & span {
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;  
+    }
+    & .produtivo {
+      border: 1px solid rgba(0, 128, 0, 0.8);
+      box-shadow: 0 0 8px rgba(0, 128, 0, 0.6);
+    }
+
+    & .improdutivo {
+      border: 1px solid rgba(255, 0, 0, 0.8);
+      box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
+    }
+  }
+
+  & #suggestion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+
+    & p {
+      padding: 1rem;
+      color: #111;
+      border-radius: 4px;
+      background: rgb(255, 255, 255, 0.9);
+    }
+  }
+
+  & #actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 2rem;
+
+    & #to-do-list {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      border-radius: 4px;
+      border: 1px solid #333;
+      gap: 1rem;
+
+      & .task {
+        display: flex;
+        gap: 0.5rem;
+        align-items: start;
+
+        & img {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+}
+
+#inactive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 43%;
+
+  & p {
+    font-family: var(--standard-font);
+    color: white;
+    text-align: center;
+    font-weight: 400;
+    font-size: 1rem;
+  }
+
+  & #insights {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+
+    & div {
+      width: 150px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 0.5rem 0.5rem;
+      gap: 6px;
+
+      & img {
+        width: 30px;
+        height: 30px;
+      }
+
+      & span {
+        font-size: 2rem;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      }
+
+      & p {
+        color: white;
+        font-family: var(--standard-font);
+        font-size: 0.7rem;
+        text-align: center;
+      }
+    }
+    & div + div {
+      border-left: solid 1px #ffffff84;
+    }
+  }
+}
+
+@media(max-width: 500px) {
+
+  body {
+    height: auto;
+    padding: 4rem 0;
+  }
+
+  #loader p {
+    text-align: center;
+    font-size: 0.875rem;
+  }
+
+  #container {
+    flex-direction: column;
+    padding: 4rem 2rem;
+    gap: 2rem;
+    width: 90%;
+  }
+
+  #separator {
+    height: 1px;
+    width: 96%;
+    display: block;
+    background: #002f4c;
+  }
+
+  #form {
+    width: 100%;
+  }
+
+  #result {
+    width: 100%;
+    height: auto;
+  }
+
+  #inactive {
+    width: 100%;
+
+    & #insights {
+      flex-direction: column;
+      gap: 1rem;
+
+      & div + div {
+        border-left: none;
+      }
+      & div {
+        border-bottom: solid 1px #ffffff84;
+        padding-bottom: 1rem;
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+      }
+      & div:nth-child(3) {
+        border-left: none;
+        border-bottom: none;
+      }
+      & div span {
+        display: none;
+      }
+      & div p {
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+}
+
+</style>
+
+<script>
+
+const sendFileButton = document.querySelector('#sendFileButton')
+const sendTextButton = document.querySelector('#sendTextButton')
+const analysisButton = document.querySelector('#analyse')
+
+const emailTextField = document.querySelector('textarea')
+
+const dropzone = document.getElementById('fileDropzone')
+const fileInput = document.getElementById('emailFile')
+const fileInfo  = document.getElementById('fileInfo')
+
+const inactiveScreen = document.querySelector('#inactive')
+const resultsScreen = document.querySelector('#result')
+
+let textOption = true
+let fileOption = false
+
+dropzone.addEventListener('click', () => fileInput.click())
+dropzone.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault()
+    fileInput.click()
+  }
+})
+
+;['dragenter', 'dragover'].forEach(evt =>
+  dropzone.addEventListener(evt, (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    dropzone.classList.add('is-active')
+  })
+)
+
+;['dragleave', 'dragend', 'drop'].forEach(evt =>
+  dropzone.addEventListener(evt, (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    dropzone.classList.remove('is-active')
+  })
+)
+
+dropzone.addEventListener('drop', (e) => {
+  const files = e.dataTransfer.files
+  if (!files || !files.length) return
+  fileInput.files = files
+  showSelectedFiles(files)
+})
+
+fileInput.addEventListener('change', (e) => {
+  showSelectedFiles(e.target.files)
+})
+
+function showSelectedFiles(files) {
+  const list = Array.from(files).map(f => `${icon} ${f.name} (${formatBytes(f.size)})`)
+  fileInfo.textContent = list.join(', ')
+}
+
+
+function formatBytes(bytes) {
+  if (!+bytes) return '0 B'
+  const units = ['B','KB','MB','GB','TB']
+  const i = Math.floor(Math.log(bytes) / Math.log(1024))
+  return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${units[i]}`
+}
+
+sendFileButton.addEventListener('click', () => {
+  fileOption = true
+  textOption = false
+  emailTextField.style.display = 'none'
+  dropzone.style.display = 'block'
+  sendFileButton.style.background = 'var(--orange-400)'
+  sendTextButton.style.background = 'transparent'
+})
+
+sendTextButton.addEventListener('click', () => {
+  fileOption = false
+  textOption = true
+  dropzone.style.display = 'none'
+  emailTextField.style.display = 'block'
+  sendFileButton.style.background = 'transparent'
+  sendTextButton.style.background = 'var(--orange-400)'
+})
+
+
+function showToast(message, type = 'error') {
+  const container = document.getElementById('toast-container');
+  
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  
+  container.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.remove();
+  }, 4500);
+}
+
+
+function clearFileSelection() {
+  fileInput.value = '';
+  fileInfo.innerHTML = '';
+  fileInfo.style.display = 'none';
+}
+
+
+function showSelectedFiles(files) {
+  if (!files || files.length === 0) {
+    clearFileSelection();
+    return;
+  }
+  
+  const file = files[0];
+  fileInfo.innerHTML = '';
+
+  const fileNameSpan = document.createElement('span');
+  fileNameSpan.textContent = `${file.name} (${formatBytes(file.size)})`;
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'delete-file-btn';
+  deleteBtn.textContent = 'x';
+  deleteBtn.ariaLabel = 'Remover arquivo';
+  deleteBtn.onclick = clearFileSelection;
+
+  fileInfo.appendChild(fileNameSpan);
+  fileInfo.appendChild(deleteBtn);
+
+  fileInfo.style.display = 'flex';
+}
+
+
+analysisButton.addEventListener('click', async () => {
+
+  const textContent = emailTextField.value;
+  const fileContent = fileInput.files[0];
+
+  if (!textContent && !fileContent) {
+    showToast('Por favor, insira um texto ou selecione um arquivo.');
+    return;
+  }
+
+  analysisButton.textContent = 'Analisando...'
+  analysisButton.disabled = true
+  analysisButton.style.cursor = 'not-allowed'
+  analysisButton.style.opacity = '0.7'
+
+  inactiveScreen.style.display = 'none'
+  resultsScreen.style.display = 'none'
+
+  const loaderScreen = document.querySelector('#loader');
+  loaderScreen.style.display = 'flex';
+  analysisButton.textContent = 'Analisando...';
+
+  let endpoint = ''
+  let body = null
+
+  if(textOption) {
+    endpoint = 'http://127.0.0.1:8000/processing-text'
+    body = JSON.stringify({ text: textContent })
+  } else if(fileOption) {
+    endpoint = 'http://127.0.0.1:8000/processing-file'
+    body = new FormData()
+    body.append('file', fileContent)
+  } else {
+    showToast('Por favor, insira um texto ou selecione um arquivo.')
+    analysisButton.textContent = 'Analisar e-mail';
+    analysisButton.style.cursor = 'pointer'
+    analysisButton.style.opacity = '1'
+    analysisButton.disabled = false;
+    return
+  }
+
+  try{
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      body: body,
+      headers: textOption ? { 'Content-Type': 'application/json' } : {},
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      if (response.status === 429) {
+        loaderScreen.style.display = 'none';
+        inactiveScreen.style.display = 'flex'
+        showToast(`${errorData.detail}`);
+      } else {
+        throw new Error(errorData.detail || 'Ocorreu um erro no servidor.');
+      }
+      return; 
+    }
+
+    const data = await response.json()
+
+    const badge = document.querySelector('#result #badges span');
+    badge.textContent = data.category;
+    badge.className = '';
+    badge.classList.add(data.category.toLowerCase() === 'produtivo' ? 'produtivo' : 'improdutivo');
+    
+    const suggestionContainer = document.querySelector('#result #suggestion p');
+    const suggestion = data.suggested_response;
+    
+    suggestionContainer.innerHTML = `
+      <b>Assunto:</b> ${suggestion.assunto}<br><br>
+      ${suggestion.conteudo.replace(/\n/g, '<br>')}
+    `;
+
+
+    const toDoListContainer = document.querySelector('#to-do-list');
+    const actionsContainer = document.querySelector('#actions');
+
+    toDoListContainer.innerHTML = ''; 
+
+    if (data.tasks && data.tasks.length > 0) {
+      actionsContainer.style.display = 'flex';
+      
+      data.tasks.forEach(taskText => {
+        const taskDiv = document.createElement('div');
+        taskDiv.className = 'task';
+
+        const checkSpan = document.createElement('span');
+        checkSpan.textContent = '✔';
+
+        const textSpan = document.createElement('span');
+        textSpan.textContent = taskText;
+
+        taskDiv.appendChild(checkSpan);
+        taskDiv.appendChild(textSpan);
+
+        toDoListContainer.appendChild(taskDiv);
+      });
+    } else {
+      actionsContainer.style.display = 'none';
+    }
+
+    inactiveScreen.style.display = 'none';
+    resultsScreen.style.display = 'flex';
+
+    loaderScreen.style.display = 'none';
+    resultsScreen.style.display = 'flex';
+  }
+  catch (error) {
+    console.error('Erro ao analisar e-mail:', error);
+    showToast(`${error.message}`);
+
+    loaderScreen.style.display = 'none';
+    inactiveScreen.style.display = 'flex';
+  }
+  finally {
+    analysisButton.textContent = 'Analisar e-mail';
+    analysisButton.style.cursor = 'pointer'
+    analysisButton.style.opacity = '1'
+    analysisButton.disabled = false;
+    clearFileSelection()
+  }
+
+})
+
+</script>
