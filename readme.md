@@ -78,4 +78,4 @@ Para rodar este projeto localmente, siga os passos abaixo:
 
 6.  **Abra o frontend:**
   * Navegue até a pasta `front`.
-  * Abra o arquivo `index.html` em seu navegador (recomenda-se usar a extensão "Live Server" do VS Code).
+  * Rode o arquivo `index.html` na porta :5500 (é recomendado usar a extensão "Live Server" do VS Code).
