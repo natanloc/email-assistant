@@ -22,7 +22,7 @@ class Email(BaseModel):
 app = FastAPI()
 
 origins = [
-  "https://email-assistant.onrender.com",
+  "https://email-assistant-frontend-nez0.onrender.com",
   "http://localhost:5500",
   "http://127.0.0.1:5500",
 ]

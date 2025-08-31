@@ -746,10 +746,10 @@ analysisButton.addEventListener('click', async () => {
   let body = null
 
   if(textOption) {
-    endpoint = 'http://127.0.0.1:8000/processing-text'
+    endpoint = 'https://email-assistant-backend-1ofy.onrender.com/processing-text'
     body = JSON.stringify({ text: textContent })
   } else if(fileOption) {
-    endpoint = 'http://127.0.0.1:8000/processing-file'
+    endpoint = 'https://email-assistant-backend-1ofy.onrender.com/processing-file'
     body = new FormData()
     body.append('file', fileContent)
   } else {
