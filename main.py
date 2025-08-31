@@ -143,7 +143,6 @@ def generateTasksWithGemini(email_text: str):
 @app.post('/processing-text')
 async def processingText(email: Email):
   result = processLogic(email.text)
-  result["source"] = "json_text"
   return result
 
 @app.post('/processing-file')
@@ -162,5 +161,4 @@ async def processingFile(file: UploadFile = File(...)):
     raise HTTPException(status_code=400, detail="Formato de arquivo não suportado. Por favor, use .txt or .pdf.")
   
   result = processLogic(extracted_text)
-  result["source"] = file.filename
   return result
