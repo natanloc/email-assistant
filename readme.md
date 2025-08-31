@@ -79,3 +79,7 @@ Para rodar este projeto localmente, siga os passos abaixo:
 6.  **Abra o frontend:**
   * Navegue até a pasta `front`.
   * Rode o arquivo `index.html` na porta :5500 (é recomendado usar a extensão "Live Server" do VS Code).
+
+7.  **Limitações do protótipo:**
+  * Esse projeto usa a API gratuita do Gemini, portanto possui uma limitação diária de requisições que, ao ser excedida, exibe um erro para o usuário avisando que o limite de créditos da IA foi excedido.
+  * Ao evoluir o projeto para ser publicado oficialmente, faríamos o upgrade da API para que não houvesse essa limitação.
