@@ -1,4 +1,4 @@
-# AutoU - Assistente Inteligente de E-mails
+# Assistente Inteligente de E-mails
 
 Python | FastAPI | HTML | JavaScript | Render
 
@@ -8,7 +8,7 @@ Python | FastAPI | HTML | JavaScript | Render
 
 ## Descrição
 
-O **AutoU - E-mail Assistant** é uma aplicação full-stack projetada para otimizar a gestão de e-mails através de Inteligência Artificial. A ferramenta analisa o conteúdo de um e-mail (enviado via texto, ou por arquivos .txt ou .pdf), classifica como `produtivo` ou `improdutivo`, gera uma lista de tarefas e sugere uma resposta completa, economizando tempo e aumentando a produtividade do usuário.
+O **E-mail Assistant** é uma aplicação full-stack projetada para otimizar a gestão de e-mails através de Inteligência Artificial. A ferramenta analisa o conteúdo de um e-mail (enviado via texto, ou por arquivos .txt ou .pdf), classifica como `produtivo` ou `improdutivo`, gera uma lista de tarefas e sugere uma resposta completa, economizando tempo e aumentando a produtividade do usuário.
 
 ## Funcionalidades Principais
 
